@@ -29,7 +29,7 @@ pub fn encode<T>(claims T, algorithm Algorithm, secretOrKey string, exp int) ?st
 	// sign with AlgorithmType
 	signature := algorithm.sign(contents, secretOrKey)?
 	
-	return '${message}.${signature}'
+	return '${contents}.${signature}'
 }
 
 // verify is a function that verifies a given token and returns the decoded claims
