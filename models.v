@@ -70,7 +70,7 @@ pub fn parse_token(token_raw string) ?Token {
 	// check if the expiration timestamp was set
 	expiration_unix := claims["exp"] or {
 		expiration_given = false
-		json2.Any{}
+		json2.Null{}
 	}
 
 	token := Token {
