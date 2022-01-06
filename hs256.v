@@ -2,6 +2,7 @@ module jwt
 
 import crypto.hmac
 import crypto.sha256
+import encoding.base64
 
 // HS256 implementation of the HS256 signing algorithm for JWTs
 pub struct HS256 {
@@ -13,7 +14,7 @@ pub struct HS256 {
 // `contents` actual data of the JWT (Header & Claims)
 // `secretOrKey` the secret or private for creating the signature
 pub fn (algorithm HS256) sign(content string, secret string) ?string {
-	signature := hmac.new(secret.bytes(), content.bytes(), sha256.sum, sha256.block_size).hex()
+	signature := base64.url_encode(hmac.new(secret.bytes(), content.bytes(), sha256.sum, sha256.block_size))
 	return signature
 }
 

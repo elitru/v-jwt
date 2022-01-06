@@ -12,7 +12,7 @@ import time
 pub fn encode<T>(claims T, algorithm Algorithm, secretOrKey string, exp int) ?string {
 	// encode header to JSON and then to base64
 	header := new_header(algorithm)
-	header_b64 := to_b64_part_without_padding(json.encode(header))
+	header_b64 := base64.url_encode(json.encode(header).bytes())
 
 	// encode claims
 	mut claims_final := json2.raw_decode(json.encode(claims))?.as_map()
@@ -21,7 +21,7 @@ pub fn encode<T>(claims T, algorithm Algorithm, secretOrKey string, exp int) ?st
 		claims_final["exp"] = time.now().unix_time() + exp
 	}
 
-	claims_b64 := to_b64_part_without_padding(claims_final.str())
+	claims_b64 := base64.url_encode(claims_final.str().bytes())
 
 	// concatenate header & claimns and sign them  
 	contents := '${header_b64}.${claims_b64}'
