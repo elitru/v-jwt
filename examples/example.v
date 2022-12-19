@@ -1,4 +1,4 @@
-import jwt
+import elitru.jwt
 
 struct Test {
 	pub:
@@ -10,12 +10,12 @@ fn main() {
 		name: "John Doe"
 	}
 
-	alg := new_algorithm(AlgorithmType.hs256)
-	
-	jwt := encode<Test>(claims, alg, "Hello", 1000 * 60 * 60)?
-	println(jwt)
+	alg := jwt.new_algorithm(jwt.AlgorithmType.hs256)
 
-	claims_decoded := verify<Test>(jwt, alg, "Hello") or {
+	jwt_token := jwt.encode<Test>(claims, alg, "Hello", 1000 * 60 * 60)?
+	println(jwt_token)
+
+	claims_decoded := jwt.verify<Test>(jwt_token, alg, "Hello") or {
 		panic(err)
 	}
 
