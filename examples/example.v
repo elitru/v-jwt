@@ -12,7 +12,9 @@ fn main() {
 
 	alg := jwt.new_algorithm(jwt.AlgorithmType.hs256)
 
-	jwt_token := jwt.encode<Test>(claims, alg, "Hello", 1000 * 60 * 60)?
+	jwt_token := jwt.encode<Test>(claims, alg, "Hello", 1000 * 60 * 60) or { 
+		panic(err)
+	 }
 	println(jwt_token)
 
 	claims_decoded := jwt.verify<Test>(jwt_token, alg, "Hello") or {

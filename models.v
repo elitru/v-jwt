@@ -32,7 +32,7 @@ struct Token {
 
 // parse_claims is a generic function that parses the claims of token 
 // into a real struct
-pub fn (t Token) parse_claims<T>() ?T {
+pub fn (t Token) parse_claims<T>() !T {
 	return json.decode(T, t.claims)
 }
 
@@ -45,7 +45,7 @@ pub fn (t Token) is_expired() bool {
 
 // parse_token takes a JWT string and creates a Token object
 // if the given token ius invalid, an error will be thrown
-pub fn parse_token(token_raw string) ?Token {
+pub fn parse_token(token_raw string) !Token {
 	// split token
 	parts := token_raw.split(".")
 	
@@ -63,7 +63,7 @@ pub fn parse_token(token_raw string) ?Token {
 	decoded_claims := base64.decode_str(claims_raw)
 
 	// create a raw json object from the claims in order to check for the expiration
-	claims := json2.raw_decode(decoded_claims)?.as_map()
+	claims := json2.raw_decode(decoded_claims)!.as_map()
 
 	mut expiration_given := true
 
@@ -74,7 +74,7 @@ pub fn parse_token(token_raw string) ?Token {
 	}
 
 	token := Token {
-		header: json.decode(JWTHeader, decoded_header)?,
+		header: json.decode(JWTHeader, decoded_header)!,
 		claims: decoded_claims,
 		signature: parts[2],
 		// set expiration if given, otherwise use -1 for unset
