@@ -4,7 +4,7 @@
 A JWT library for V-Lang
 
 
-## Instalação
+## Installation
 
 Install JWT library using [vpm](https://vpm.vlang.io/packages/elitru.jwt)
 
