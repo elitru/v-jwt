@@ -9,12 +9,12 @@ pub interface Algorithm {
 	// sign creates the signed JWT
 	// `contents` actual data of the JWT (Header & Claims)
 	// `secretOrKey` the secret or private for creating the signature
-	sign(contents string, secretOrKey string) ?string
+	sign(contents string, secretOrKey string) !string
 
 	// verify decodes and validates a given token
 	// `token` the token to be decoded
 	// `secretOrKey` the secret or private which was used for creating the signature
-	verify(token string, secretOrKey string) ?Token
+	verify(token string, secretOrKey string) !Token
 }
 
 // AlgorithmType contains all signature algorithms included in this library

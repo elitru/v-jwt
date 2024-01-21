@@ -9,13 +9,13 @@ import time
 // `claims` the payload of the JTW (can be struct you want)
 // `algorithm` the algorithm used in order to create the signature
 // `secretOrKey` the secret used for creating the signature
-pub fn encode<T>(claims T, algorithm Algorithm, secretOrKey string, exp int) ?string {
+pub fn encode<T>(claims T, algorithm Algorithm, secretOrKey string, exp int) !string {
 	// encode header to JSON and then to base64
 	header := new_header(algorithm)
 	header_b64 := base64.url_encode(json.encode(header).bytes())
 
 	// encode claims
-	mut claims_final := json2.raw_decode(json.encode(claims))?.as_map()
+	mut claims_final := json2.raw_decode(json.encode(claims))!.as_map()
 	
 	if exp != 0 {
 		claims_final["exp"] = time.now().unix_time() + exp
@@ -27,7 +27,7 @@ pub fn encode<T>(claims T, algorithm Algorithm, secretOrKey string, exp int) ?st
 	contents := '${header_b64}.${claims_b64}'
 
 	// sign with AlgorithmType
-	signature := algorithm.sign(contents, secretOrKey)?
+	signature := algorithm.sign(contents, secretOrKey)!
 	
 	return '${contents}.${signature}'
 }
@@ -36,6 +36,6 @@ pub fn encode<T>(claims T, algorithm Algorithm, secretOrKey string, exp int) ?st
 // `token` the JWT to be verified
 // `algorithm` must be the same algorithm which was used when creating the JWT
 // `secretOrKey` the secret which was used for creating the signature
-pub fn verify<T>(token string, algorithm Algorithm, secretOrKey string) ?T {
-	return algorithm.verify(token, secretOrKey)?.parse_claims<T>()
+pub fn verify<T>(token string, algorithm Algorithm, secretOrKey string) !T {
+	return algorithm.verify(token, secretOrKey)!.parse_claims<T>()
 }
